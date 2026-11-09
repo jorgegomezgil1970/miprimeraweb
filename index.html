@@ -10,15 +10,6 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/responsive.css">
 
-  <!-- Three.js (única librería externa) desde CDN mediante importmap -->
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-    }
-  }
-  </script>
 </head>
 <body>
   <a class="skip-link" href="#view">Saltar al contenido</a>
@@ -60,23 +51,39 @@
   <!-- Zona de notificaciones -->
   <div class="toasts" id="toasts" aria-live="polite" aria-relevant="additions"></div>
 
-  <!-- Aviso si los módulos no cargan (p. ej. abrir con file:// en Chrome) -->
+  <!-- Aviso por si algún script no llega a cargar -->
   <div class="boot-fallback" id="boot-fallback" hidden>
     <div>
       <h1>No se pudo iniciar Organiza</h1>
-      <p>Tu navegador ha bloqueado los módulos JavaScript al abrir el archivo directamente (<code>file://</code>).</p>
-      <p>Sírvela con un servidor estático, por ejemplo:</p>
-      <pre><code>python -m http.server 8000</code></pre>
-      <p>y abre <code>http://localhost:8000</code>. También funciona con la extensión «Live Server» de VS Code o abriendo el archivo en Firefox.</p>
+      <p>Comprueba que la carpeta está completa (index.html junto a las carpetas <code>css</code> y <code>js</code>) y vuelve a abrir <code>index.html</code>.</p>
     </div>
   </div>
 
-  <script type="module" src="js/app.js"></script>
+  <!--
+    Solo HTML, CSS y JavaScript estáticos: scripts clásicos (sin módulos ni librerías externas),
+    así la app funciona con doble clic en index.html (file://) y sin conexión.
+    El orden importa: cada archivo publica su API en window.Organiza.
+  -->
+  <script defer src="js/utils.js"></script>
+  <script defer src="js/store.js"></script>
+  <script defer src="js/illustrations.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/tasks.js"></script>
+  <script defer src="js/meetings.js"></script>
+  <script defer src="js/reminders.js"></script>
+  <script defer src="js/kanban.js"></script>
+  <script defer src="js/settings.js"></script>
+  <script defer src="js/3d/common3d.js"></script>
+  <script defer src="js/3d/dashboard3d.js"></script>
+  <script defer src="js/3d/calendar3d.js"></script>
+  <script defer src="js/dashboard.js"></script>
+  <script defer src="js/calendar.js"></script>
+  <script defer src="js/app.js"></script>
   <script>
-    // Si tras unos segundos la app no ha arrancado, mostrar instrucciones.
+    // Si tras unos segundos la app no ha arrancado, mostrar un aviso en lugar de una página vacía.
     setTimeout(function () {
       if (!window.__organizaBooted) document.getElementById('boot-fallback').hidden = false;
-    }, 2500);
+    }, 3000);
   </script>
 </body>
 </html>

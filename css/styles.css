@@ -542,10 +542,8 @@ dialog.modal.closing::backdrop { opacity: 0; transition: opacity 160ms; }
   position: relative; width: 100%; height: 340px; border-radius: var(--radius); overflow: hidden; background: #f6f8fb;
   touch-action: none;
 }
-.scene canvas { width: 100% !important; height: 100% !important; }
 .scene.scene-2d { height: auto; min-height: 200px; touch-action: auto; padding: 10px; overflow: visible; }
 .scene-loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: .9rem; animation: pulse 1.4s ease-in-out infinite; }
-.css2d-layer { position: absolute !important; top: 0; left: 0; pointer-events: none; }
 .scene-tooltip {
   position: absolute; z-index: 5; top: 0; left: 0; pointer-events: none; max-width: 240px;
   background: rgba(31, 42, 58, .92); color: #fff; padding: 8px 10px; border-radius: 10px; font-size: .82rem;
@@ -553,6 +551,8 @@ dialog.modal.closing::backdrop { opacity: 0; transition: opacity 160ms; }
 }
 .scene-tooltip span { color: #d6deea; font-size: .76rem; }
 .island-label {
+  position: absolute; left: 0; top: 0;
+  transform: translate3d(0, calc(var(--u) * 4.15), calc(var(--u) * .5)) rotateZ(calc(-1 * var(--rz))) rotateX(calc(-1 * var(--rx))) translate(-50%, -50%);
   display: grid; justify-items: center; gap: 0; padding: 5px 12px; border-radius: 12px; background: rgba(255, 255, 255, .92);
   box-shadow: var(--shadow); font-size: .8rem; white-space: nowrap; text-align: center;
 }
@@ -616,28 +616,21 @@ dialog.modal.closing::backdrop { opacity: 0; transition: opacity 160ms; }
 .segmented button[aria-checked="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
 .calendar-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
 .scene-cal { height: 380px; }
-.day-num { font-size: .78rem; font-weight: 700; color: var(--text-2); padding: 1px 6px; border-radius: 7px; transition: background var(--fast), color var(--fast); }
-.day-num.out { color: #9aa6b6; }
-.day-num.today { background: var(--primary); color: #fff; }
-.day-num.selected:not(.today) { background: var(--text); color: #fff; }
-.day-more { font-size: .68rem; font-weight: 700; color: var(--muted); }
-.weekday-label { font-size: .78rem; font-weight: 700; color: var(--muted); }
+.day-num { position: absolute; left: 5px; top: 3px; font-size: clamp(.6rem, calc(var(--u) * .34), .85rem); line-height: 1.3; font-weight: 700; color: var(--text-2); padding: 1px 6px; border-radius: 7px; transition: background var(--fast), color var(--fast); }
+.cell.out .day-num { color: #8d99aa; }
+.cell.today .day-num { background: var(--primary); color: #fff; }
+.cell.selected:not(.today) .day-num { background: var(--text); color: #fff; }
+.day-more { position: absolute; right: 5px; top: 3px; font-size: .68rem; font-weight: 700; color: var(--muted); }
+.weekday-label { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: .78rem; font-weight: 700; color: var(--muted); }
 .weekday-label.big { font-size: .82rem; color: var(--text-2); background: rgba(255, 255, 255, .9); padding: 2px 8px; border-radius: 8px; white-space: nowrap; }
 .weekday-label.big.today { background: var(--primary); color: #fff; }
 .weekday-label.big.selected:not(.today) { background: var(--text); color: #fff; }
-.hour-label { font-size: .7rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hour-label { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: .7rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .day-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sm); align-self: start; scroll-margin-top: 70px; min-width: 0; }
 .day-panel .mini-title { white-space: normal; flex: 1 1 140px; }
 .day-panel .mini-item { flex-wrap: wrap; }
 .day-panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
 .panel-sub { display: flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--muted); margin: 14px 0 6px; text-transform: uppercase; letter-spacing: .04em; }
-/* Lista de días accesible por teclado: oculta hasta recibir foco */
-.cal-a11y { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-.cal-a11y:focus-within { position: static; width: auto; height: auto; clip: auto; margin-top: 10px; }
-.cal-a11y ul { display: flex; flex-wrap: wrap; gap: 4px; }
-.cal-a11y button { position: relative; min-width: 36px; height: 36px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); font-weight: 600; }
-.cal-a11y button[aria-current] { background: var(--text); color: #fff; }
-.cal-a11y .dot { position: absolute; bottom: 3px; left: 50%; width: 4px; height: 4px; border-radius: 50%; background: var(--primary); transform: translateX(-50%); }
 /* Calendario 2D alternativo */
 .cal-2d { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin-top: 8px; }
 .cal-2d-head { text-align: center; font-size: .75rem; font-weight: 700; color: var(--muted); padding: 4px 0; }
@@ -662,6 +655,139 @@ dialog.modal.closing::backdrop { opacity: 0; transition: opacity 160ms; }
 .week-2d-item.cat-personal { border-left-color: var(--personal); }
 .week-2d-item.cat-trabajo { border-left-color: var(--trabajo); }
 .week-2d-item.cat-estudio { border-left-color: var(--estudio); }
+
+
+/* ==========================================================================
+   Escenas 3D con CSS (sin librerías): cámara, mundo, cajas, islas y calendario
+   ========================================================================== */
+@property --pct { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+.s3d {
+  position: absolute; inset: 0; overflow: hidden; user-select: none; touch-action: none; cursor: grab;
+  --rx: 50deg; --rz: 0deg; --zoom: 1; --u: 30px;
+  background: radial-gradient(ellipse at 50% 25%, #ffffff, #eef2f7 75%);
+}
+.s3d.orbiting { cursor: grabbing; }
+.s3d-camera { position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 30%; display: grid; place-items: center; }
+.s3d-world {
+  position: relative; width: 0; height: 0; transform-style: preserve-3d;
+  transform: scale(var(--zoom)) rotateX(var(--rx)) rotateZ(var(--rz));
+  transition: transform 140ms ease-out;
+}
+.s3d.orbiting .s3d-world { transition: none; }
+.s3d-tools {
+  position: absolute; right: 8px; bottom: 8px; z-index: 3; display: flex; gap: 2px; padding: 3px;
+  background: rgba(255, 255, 255, .9); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-sm);
+}
+.s3d-tools .icon-btn { width: 32px; height: 32px; }
+
+/* Caja 3D genérica: cara superior + 4 laterales con sombreado */
+.box3d { position: absolute; left: calc(var(--w) / -2); top: calc(var(--d) / -2); width: var(--w); height: var(--d); transform-style: preserve-3d; }
+.box3d .face { position: absolute; background: var(--c); }
+.box3d .f-top { inset: 0; transform: translateZ(var(--h)); border-radius: 3px; transform-style: preserve-3d; box-shadow: inset 0 0 0 1px rgba(31, 42, 58, .05); }
+.box3d .f-front { left: 0; top: 100%; width: 100%; height: var(--h); transform-origin: top; transform: rotateX(90deg); background: color-mix(in srgb, var(--c) 84%, #3c4a60); }
+.box3d .f-back { left: 0; bottom: 100%; width: 100%; height: var(--h); transform-origin: bottom; transform: rotateX(-90deg); background: color-mix(in srgb, var(--c) 72%, #3c4a60); }
+.box3d .f-left { right: 100%; top: 0; width: var(--h); height: 100%; transform-origin: right; transform: rotateY(90deg); background: color-mix(in srgb, var(--c) 78%, #3c4a60); }
+.box3d .f-right { left: 100%; top: 0; width: var(--h); height: 100%; transform-origin: left; transform: rotateY(-90deg); background: color-mix(in srgb, var(--c) 78%, #3c4a60); }
+
+/* ---------- Inicio: islas ---------- */
+.dash3d .island { position: absolute; left: 0; top: 0; transform-style: preserve-3d; transition: transform 400ms var(--ease); --cat: var(--trabajo); }
+.dash3d .island.cat-personal { --cat: var(--personal); }
+.dash3d .island.cat-estudio { --cat: var(--estudio); }
+.island-shadow, .island-layer, .island-top {
+  position: absolute; left: calc(var(--u) * -3); top: calc(var(--u) * -3); width: calc(var(--u) * 6); height: calc(var(--u) * 6); border-radius: 50%;
+}
+.island-shadow { background: rgba(31, 42, 58, .14); filter: blur(12px); transform: translate3d(8px, 12px, -1px); }
+.island-layer { background: color-mix(in srgb, var(--cat) 52%, #ffffff); }
+.island-layer.l1 { transform: translateZ(calc(var(--u) * .12)); background: color-mix(in srgb, var(--cat) 60%, #55627a); }
+.island-layer.l2 { transform: translateZ(calc(var(--u) * .25)); background: color-mix(in srgb, var(--cat) 55%, #8590a3); }
+.island-layer.l3 { transform: translateZ(calc(var(--u) * .38)); background: color-mix(in srgb, var(--cat) 50%, #b9c2cf); }
+.island-top { transform: translateZ(calc(var(--u) * .5)); background: radial-gradient(circle at 40% 35%, color-mix(in srgb, var(--cat) 18%, #ffffff), color-mix(in srgb, var(--cat) 34%, #ffffff)); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .6); }
+.island-ring {
+  position: absolute; left: calc(var(--u) * -3.75); top: calc(var(--u) * -3.75); width: calc(var(--u) * 7.5); height: calc(var(--u) * 7.5); border-radius: 50%;
+  transform: translateZ(2px);
+  background: conic-gradient(var(--cat) calc(var(--pct) * 360deg), #e1e6ee 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--u) * .24), #000 calc(100% - var(--u) * .24 + 1px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - var(--u) * .24), #000 calc(100% - var(--u) * .24 + 1px));
+  transition: --pct 700ms var(--ease);
+}
+.island-objects { position: absolute; left: 0; top: 0; transform-style: preserve-3d; transform: translateZ(calc(var(--u) * .5)); }
+
+/* Objetos de tareas (cada uno es un botón) */
+.obj { position: absolute; left: 0; top: 0; width: 0; height: 0; padding: 0; border: 0; background: none; transform-style: preserve-3d; transition: transform 450ms var(--ease); cursor: pointer; }
+.obj:focus-visible { box-shadow: none; }
+.obj .lift, .obj .bob { display: block; transform-style: preserve-3d; }
+.obj .lift { transition: transform 200ms var(--ease); }
+.obj:hover .lift, .obj:focus-visible .lift { transform: translateZ(calc(var(--u) * .6)) scale(1.1); }
+.obj .bob { animation: bob 3.2s ease-in-out infinite; }
+.obj .cube { animation: spin 24s linear infinite; }
+.obj-shadow { position: absolute; width: var(--s); height: var(--s); left: calc(var(--s) / -2); top: calc(var(--s) / -2); border-radius: 50%; background: rgba(31, 42, 58, .25); filter: blur(4px); transform: translateZ(1px); transition: transform 200ms; }
+.obj:hover .obj-shadow { transform: translateZ(1px) scale(.7); }
+.sphere {
+  position: absolute; width: var(--s); height: var(--s); left: calc(var(--s) / -2); top: calc(var(--s) / -2); border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 35%, #ffffff), var(--c) 55%, color-mix(in srgb, var(--c) 65%, #1f2a3a));
+  transform: translateZ(calc(var(--s) * .58)) rotateZ(calc(-1 * var(--rz))) rotateX(calc(-1 * var(--rx)));
+}
+.obj.overdue .face { box-shadow: inset 0 0 0 2px var(--alta); }
+.obj.overdue .sphere { box-shadow: 0 0 0 2px var(--alta); }
+.obj:focus-visible .face, .obj:focus-visible .sphere { outline: 2px solid var(--text); outline-offset: 1px; }
+.obj.spawn .lift { animation: objIn 500ms var(--ease) both; }
+.obj.vanish .lift { animation: objOut 800ms var(--ease) forwards; }
+.obj.fade .lift { animation: objFade 280ms ease-in forwards; }
+.obj.vanish .obj-shadow, .obj.fade .obj-shadow { transform: scale(0); }
+
+/* ---------- Calendario ---------- */
+.cal3d .cal-board, .cal3d .cell, .cal3d .flip { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+.cal3d .tile, .cal3d .block { position: absolute; left: 0; top: 0; width: 0; height: 0; padding: 0; border: 0; background: none; transform-style: preserve-3d; cursor: pointer; }
+.cal3d .tile:focus-visible, .cal3d .block:focus-visible { box-shadow: none; }
+.cal3d .lift { display: block; transform-style: preserve-3d; transition: transform 200ms var(--ease); }
+.cal3d .month .cell.today > .flip > .tile .lift { transform: translateZ(calc(var(--u) * .32)); }
+.cal3d .month .cell:hover > .flip > .tile .lift { transform: translateZ(calc(var(--u) * .14)); }
+.cal3d .month .cell.selected > .flip > .tile .lift { transform: translateZ(calc(var(--u) * .1)); }
+.cal3d .month .cell.today:hover > .flip > .tile .lift, .cal3d .month .cell.today.selected > .flip > .tile .lift { transform: translateZ(calc(var(--u) * .42)); }
+.cal3d .cell.selected .tile .f-top { box-shadow: inset 0 0 0 2px var(--primary); background: color-mix(in srgb, var(--c) 82%, var(--trabajo)); }
+.cal3d .tile:focus-visible .f-top { outline: 3px solid var(--primary); outline-offset: 2px; }
+.cal3d .ind { position: absolute; left: 0; top: 0; transform-style: preserve-3d; }
+.cal3d .sprite {
+  position: absolute; width: var(--s); height: var(--s); left: calc(var(--s) / -2); top: calc(var(--s) * -1);
+  transform-origin: 50% 100%; transform: rotateZ(calc(-1 * var(--rz))) rotateX(calc(-1 * var(--rx)));
+}
+.cal3d .sp-meeting { border-radius: 50%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 35%, #ffffff), var(--c) 60%, color-mix(in srgb, var(--c) 70%, #1f2a3a)); }
+.cal3d .sp-reminder { clip-path: polygon(50% 0, 100% 100%, 0 100%); background: linear-gradient(90deg, color-mix(in srgb, var(--c) 60%, #ffffff), var(--c) 55%, color-mix(in srgb, var(--c) 70%, #1f2a3a)); }
+.cal3d .is-done .sprite { opacity: .55; }
+.cal3d .block:hover .box3d, .cal3d .block:focus-visible .box3d { transform: translateZ(4px); }
+.cal3d .block:focus-visible .f-top { outline: 2px solid var(--text); }
+.cal3d .hour-line { position: absolute; left: 0; top: 0; height: 1px; background: #dde3ec; }
+.cal3d .week .tile .f-top { border-radius: 6px; }
+
+/* Transiciones de periodo: el tablero se desplaza y las losetas giran escalonadas */
+.cal3d .cal-board[class*="leave-"] { pointer-events: none; }
+.cal3d .enter-next { animation: boardInNext 600ms var(--ease) both; }
+.cal3d .enter-prev { animation: boardInPrev 600ms var(--ease) both; }
+.cal3d .leave-next { animation: boardOutNext 500ms ease-in both; }
+.cal3d .leave-prev { animation: boardOutPrev 500ms ease-in both; }
+.cal3d [class*="enter-"] .flip { animation: tileIn 550ms var(--ease) both; animation-delay: calc(var(--c) * 35ms + var(--r) * 20ms + 80ms); }
+.cal3d .enter-prev .flip { animation-delay: calc((6 - var(--c)) * 35ms + var(--r) * 20ms + 80ms); }
+.cal3d [class*="leave-"] .flip { animation: tileOut 420ms ease-in both; animation-delay: calc(var(--c) * 25ms); }
+.cal3d .leave-prev .flip { animation-delay: calc((6 - var(--c)) * 25ms); }
+
+/* Calidad reducida (móvil), movimiento reducido y pestaña oculta */
+.s3d-lite .island-shadow, .s3d-lite .obj-shadow { display: none; }
+.s3d-lite .obj .cube { animation: none; }
+.s3d-still *, .s3d-still { animation: none !important; transition: none !important; }
+.anim-paused .s3d * { animation-play-state: paused !important; }
+
+@keyframes bob { 50% { transform: translateZ(calc(var(--u) * .08)); } }
+@keyframes spin { to { transform: rotateZ(360deg); } }
+@keyframes objIn { from { transform: scale(.01); } }
+@keyframes objOut { to { transform: translateZ(calc(var(--u) * 1.5)) rotateZ(270deg) scale(.01); } }
+@keyframes objFade { to { transform: scale(.01); } }
+@keyframes tileIn { from { transform: rotateX(-90deg) scale(.2); } }
+@keyframes tileOut { to { transform: rotateX(90deg) scale(.2); } }
+@keyframes boardInNext { from { transform: translateX(calc(var(--u) * 3.5)); } }
+@keyframes boardInPrev { from { transform: translateX(calc(var(--u) * -3.5)); } }
+@keyframes boardOutNext { to { transform: translateX(calc(var(--u) * -3.5)); } }
+@keyframes boardOutPrev { to { transform: translateX(calc(var(--u) * 3.5)); } }
 
 /* ---------- Ajustes ---------- */
 .settings-grid { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
