@@ -25,6 +25,11 @@ window.CONFIG = {
   /* Firma opcional que aparece al final de la portada (déjala '' para ocultarla). */
   signature: 'Con todo mi cariño',
 
+  /* VISTA PREVIA: si lo pones a true, todos los regalos se pueden abrir
+     sin importar la fecha (útil para revisarlo todo antes de regalarlo).
+     ¡Acuérdate de volver a ponerlo a false antes de entregarlo! */
+  unlockAll: false,
+
   /* Los 24 días.
      Cada día tiene:
        - day:     número del día (1 a 24). No lo cambies.

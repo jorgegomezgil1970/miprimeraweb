@@ -62,6 +62,7 @@ function currentDate() {
 /* Regla: en diciembre el día N se abre a partir del N; desde el 25 (y
    durante enero) todo está abierto; el resto del año todo bloqueado. */
 function isUnlocked(day) {
+  if (CONFIG.unlockAll) return true;
   if (TEST_MODE && testState.unlockAll) return true;
   const d = currentDate();
   const month = d.getMonth();
@@ -1556,7 +1557,9 @@ function updateHud() {
   const d = currentDate();
   let text;
   let canFocus = false;
-  if (TEST_MODE && testState.unlockAll) {
+  if (CONFIG.unlockAll) {
+    text = 'Vista previa · todos los regalos abiertos';
+  } else if (TEST_MODE && testState.unlockAll) {
     text = 'Modo prueba · todo desbloqueado';
   } else if (d.getMonth() === 11 && d.getDate() <= 24) {
     const g = todayGift();
