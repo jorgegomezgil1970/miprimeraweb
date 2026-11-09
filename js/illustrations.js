@@ -7,6 +7,9 @@
    Todos los ids internos llevan un prefijo por día para no colisionar.
    ===================================================================== */
 
+(function () {
+'use strict';
+
 /* Paleta compartida */
 const C = {
   night: '#0b1633',
@@ -469,13 +472,13 @@ const MOTIFS = {
 };
 
 /* Devuelve el SVG del día (1-24). Si el día no existe, usa el copo. */
-export function getIllustration(day) {
+function getIllustration(day) {
   const motif = MOTIFS[day] || MOTIFS[1];
   return frame(day, motif);
 }
 
 /* Nombre descriptivo de cada ilustración (para accesibilidad). */
-export const ILLUSTRATION_NAMES = [
+const ILLUSTRATION_NAMES = [
   '', 'Copo de nieve', 'Muñeco de nieve', 'Reno', 'Estrella', 'Trineo', 'Taza de chocolate',
   'Farolillo', 'Manoplas', 'Árbol de Navidad', 'Campana', 'Vela', 'Casita nevada',
   'Bola de Navidad', 'Bastón de caramelo', 'Regalo', 'Luna y estrellas', 'Pingüino',
@@ -484,7 +487,7 @@ export const ILLUSTRATION_NAMES = [
 ];
 
 /* Marcador de posición para fotos que aún no existen. */
-export function photoPlaceholder(day, path = `assets/photos/dia${String(day).padStart(2, '0')}.jpg`) {
+function photoPlaceholder(day, path = `assets/photos/dia${String(day).padStart(2, '0')}.jpg`) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 220" role="img" aria-label="Espacio para la foto del día ${day}">
   <defs>
     <linearGradient id="ph-bg" x1="0" y1="0" x2="1" y2="1">
@@ -499,3 +502,6 @@ export function photoPlaceholder(day, path = `assets/photos/dia${String(day).pad
   <text x="150" y="180" text-anchor="middle" fill="#8ea3c9" font-family="Quicksand, sans-serif" font-size="11">${String(path).replace(/[<&>]/g, '')}</text>
 </svg>`;
 }
+
+window.Illustrations = { getIllustration, photoPlaceholder, ILLUSTRATION_NAMES };
+})();

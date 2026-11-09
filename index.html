@@ -15,7 +15,7 @@
 
   <link rel="stylesheet" href="css/styles.css">
 
-  <!-- Three.js desde CDN mediante import map (módulos ES) -->
+  <!-- Three.js desde CDN mediante import map (solo la librería 3D es un módulo) -->
   <script type="importmap">
     {
       "imports": {
@@ -141,18 +141,42 @@
     </div>
   </aside>
 
-  <!-- Aviso si los módulos no cargan (p. ej. abriendo el archivo sin servidor) -->
+  <!-- Scripts propios (clásicos, funcionan abriendo el archivo con doble clic) -->
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/illustrations.js"></script>
+
+  <!-- Carga Three.js desde el CDN y después la escena -->
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+    window.THREE = THREE;
+    window.ThreeAddons = { OrbitControls, EffectComposer, RenderPass, UnrealBloomPass, OutputPass };
+
+    const load = (src) => new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.body.appendChild(s);
+    });
+    await load('js/dayObjects.js');
+    await load('js/main.js');
+  </script>
+
+  <!-- Aviso si Three.js no se puede descargar (sin conexión a internet) -->
   <script>
     setTimeout(function () {
       if (window.__adventStarted) return;
-      var loader = document.getElementById('loader');
-      var text = document.getElementById('loaderText');
-      loader.classList.add('error');
-      text.innerHTML = location.protocol === 'file:'
-        ? 'Para ver el calendario ábrelo con un servidor local<br>(por ejemplo Live Server o <code>npx serve</code>). Mira el README.'
-        : 'No se pudo cargar la librería 3D. Comprueba tu conexión a internet y recarga la página.';
-    }, location.protocol === 'file:' ? 1500 : 15000);
+      document.getElementById('loader').classList.add('error');
+      document.getElementById('loaderText').textContent =
+        'No se pudo cargar la librería 3D. Comprueba tu conexión a internet y recarga la página.';
+    }, 15000);
   </script>
-  <script type="module" src="js/main.js"></script>
 </body>
 </html>

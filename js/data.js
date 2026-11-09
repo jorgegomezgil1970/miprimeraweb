@@ -11,7 +11,7 @@
    - No borres las comas que separan los elementos.
    ===================================================================== */
 
-export const CONFIG = {
+window.CONFIG = {
   /* Nombre de la persona que recibe el regalo.
      Aparece en la portada y en la cabecera de la escena. */
   recipientName: 'Lucía',
@@ -64,4 +64,3 @@ export const CONFIG = {
   ],
 };
 
-export default CONFIG;

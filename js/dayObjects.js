@@ -9,7 +9,9 @@
    createEnvironment(renderer) genera un mapa de entorno nocturno
    procedural para que los metales y cristales tengan reflejos fríos.
    ===================================================================== */
-import * as THREE from 'three';
+(function () {
+'use strict';
+const THREE = window.THREE;
 
 /* ---------- Paleta y materiales reutilizables ---------------------- */
 const COL = {
@@ -843,13 +845,13 @@ const BUILDERS = {
 };
 
 /* Crea el objeto del día, centrado y escalado para el visor. */
-export function createDayObject(day) {
+function createDayObject(day) {
   const build = BUILDERS[day] || BUILDERS[15];
   return fit(build());
 }
 
 /* Nombres de los objetos (accesibilidad). */
-export const OBJECT_NAMES = [
+const OBJECT_NAMES = [
   '', 'Copo de nieve', 'Muñeco de nieve', 'Bola de Navidad', 'Estrella', 'Trineo', 'Taza de chocolate',
   'Farolillo', 'Campana', 'Arbolito', 'Calcetín navideño', 'Vela', 'Casita nevada', 'Bola de nieve',
   'Bastón de caramelo', 'Regalo', 'Luna creciente', 'Pingüino', 'Corona de Adviento', 'Gorro de lana',
@@ -857,7 +859,7 @@ export const OBJECT_NAMES = [
 ];
 
 /* Mapa de entorno procedural "noche invernal" para reflejos. */
-export function createEnvironment(renderer) {
+function createEnvironment(renderer) {
   const pmrem = new THREE.PMREMGenerator(renderer);
   const env = new THREE.Scene();
   const skyMat = new THREE.ShaderMaterial({
@@ -899,7 +901,7 @@ export function createEnvironment(renderer) {
 }
 
 /* Libera recursos de un objeto (geometrías, materiales y texturas). */
-export function disposeObject(root) {
+function disposeObject(root) {
   root.traverse((o) => {
     if (o.geometry) o.geometry.dispose();
     if (o.material) {
@@ -915,3 +917,6 @@ export function disposeObject(root) {
     if (o.isLight && o.dispose) o.dispose();
   });
 }
+
+window.DayObjects = { createDayObject, createEnvironment, disposeObject, OBJECT_NAMES };
+})();

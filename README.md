@@ -6,31 +6,17 @@ Hecho solo con **HTML, CSS y JavaScript** (sin frameworks ni npm). El 3D usa [Th
 
 ## Cómo abrirlo
 
-Los módulos ES **no funcionan abriendo `index.html` con doble clic** (`file://`). Hace falta un servidor local:
+Haz **doble clic en `index.html`**: se abre en el navegador y funciona tal cual, sin servidor ni instalaciones.
 
-**Opción A: VS Code + Live Server**
-1. Instala la extensión *Live Server*.
-2. Clic derecho en `index.html` → *Open with Live Server*.
+> Hace falta conexión a internet para descargar Three.js y las tipografías de Google Fonts.
 
-**Opción B: Node.js**
+Para el **modo prueba** añade `?test=1` al final de la dirección que aparece en el navegador (por ejemplo `…/index.html?test=1`) y pulsa Intro.
 
-```bash
-npx serve .
-```
+Para regalarlo puedes enviar la carpeta comprimida en un zip, o publicarla gratis en GitHub Pages, Netlify o Vercel subiendo la carpeta tal cual.
 
-y abre la dirección que aparece (normalmente http://localhost:3000).
+### ¿Por qué funciona con doble clic?
 
-**Opción C: Python**
-
-```bash
-python3 -m http.server 8000
-```
-
-y abre http://localhost:8000.
-
-> Hace falta conexión a internet para cargar Three.js y las tipografías de Google Fonts.
-
-Para regalarlo puedes publicarlo gratis en GitHub Pages, Netlify o Vercel: basta con subir la carpeta tal cual.
+Los archivos de `js/` son scripts clásicos que comparten datos mediante variables globales (`window.CONFIG`, `window.audio`…). Solo Three.js se carga como módulo desde el CDN, y eso sí está permitido al abrir el archivo directamente.
 
 ## Personalizarlo
 
@@ -56,7 +42,7 @@ Las fotos van en `assets/photos/` con los nombres `dia01.jpg` … `dia24.jpg` (v
 
 ### Modo prueba
 
-Añade `?test=1` a la URL (p. ej. `http://localhost:3000/?test=1`). Se desbloquea todo y aparece un pequeño panel abajo a la izquierda (botón ⚙) para:
+Añade `?test=1` a la URL (p. ej. `…/index.html?test=1`). Se desbloquea todo y aparece un pequeño panel abajo a la izquierda (botón ⚙) para:
 - activar o desactivar "Desbloquear todo",
 - simular una fecha concreta,
 - reiniciar el progreso guardado.

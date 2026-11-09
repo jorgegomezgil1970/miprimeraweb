@@ -12,6 +12,9 @@
    usuario (el botón "Entrar"), así los navegadores no lo bloquean.
    ===================================================================== */
 
+(function () {
+'use strict';
+
 const STORAGE_KEY = 'adviento.muted';
 
 /* --- Utilidades seguras para localStorage ------------------------- */
@@ -333,5 +336,5 @@ class AudioManager {
   }
 }
 
-export const audio = new AudioManager();
-export default audio;
+window.audio = new AudioManager();
+})();

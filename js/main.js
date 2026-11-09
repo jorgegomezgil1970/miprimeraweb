@@ -10,17 +10,18 @@
      6. Interfaz: portada, HUD, sonido, modo prueba
      7. Bucle de render y arranque
    ===================================================================== */
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+(function () {
+'use strict';
 
-import CONFIG from './data.js';
-import audio from './audio.js';
-import { getIllustration, photoPlaceholder, ILLUSTRATION_NAMES } from './illustrations.js';
-import { createDayObject, createEnvironment, disposeObject, OBJECT_NAMES } from './dayObjects.js';
+/* Three.js y sus complementos los carga index.html desde el CDN y los
+   deja en variables globales; el resto de archivos también son scripts
+   clásicos, así la página funciona abriendo index.html con doble clic. */
+const THREE = window.THREE;
+const { OrbitControls, EffectComposer, RenderPass, UnrealBloomPass, OutputPass } = window.ThreeAddons;
+const CONFIG = window.CONFIG;
+const audio = window.audio;
+const { getIllustration, photoPlaceholder, ILLUSTRATION_NAMES } = window.Illustrations;
+const { createDayObject, createEnvironment, disposeObject, OBJECT_NAMES } = window.DayObjects;
 
 /* =====================================================================
    1. UTILIDADES
@@ -1801,4 +1802,5 @@ async function start() {
     /* seguimos intentándolo */
   }
   start();
+})();
 })();
