@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050b1d">
+  <meta name="description" content="Un calendario de Adviento en 3D: veinticuatro regalos bajo un árbol de invierno mágico.">
+  <title>Calendario de Adviento</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Ccircle r='50' fill='%230b1633'/%3E%3Cg stroke='%23bfe6ff' stroke-width='7' stroke-linecap='round'%3E%3Cline y1='-34' y2='34'/%3E%3Cline y1='-34' y2='34' transform='rotate(60)'/%3E%3Cline y1='-34' y2='34' transform='rotate(120)'/%3E%3C/g%3E%3C/svg%3E">
+
+  <!-- Tipografías: Great Vibes (decorativa) y Quicksand (legible) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Three.js desde CDN mediante import map (módulos ES) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- Lienzo de la escena 3D -->
+  <canvas id="scene" aria-label="Árbol de Navidad con 24 regalos"></canvas>
+
+  <!-- Pantalla de carga -->
+  <div id="loader" class="screen loader" role="status" aria-live="polite">
+    <div class="loader-flake" aria-hidden="true">
+      <svg viewBox="-50 -50 100 100">
+        <g stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+          <g><line y1="-40" y2="40"/><polyline points="-10,-30 0,-20 10,-30"/><polyline points="-10,30 0,20 10,30"/></g>
+          <g transform="rotate(60)"><line y1="-40" y2="40"/><polyline points="-10,-30 0,-20 10,-30"/><polyline points="-10,30 0,20 10,30"/></g>
+          <g transform="rotate(120)"><line y1="-40" y2="40"/><polyline points="-10,-30 0,-20 10,-30"/><polyline points="-10,30 0,20 10,30"/></g>
+        </g>
+      </svg>
+    </div>
+    <p id="loaderText" class="loader-text">Preparando la magia…</p>
+    <noscript><p class="loader-text">Activa JavaScript para ver el calendario.</p></noscript>
+  </div>
+
+  <!-- Portada de bienvenida -->
+  <section id="cover" class="screen cover" hidden aria-labelledby="coverName">
+    <div class="cover-sky" aria-hidden="true"></div>
+    <div class="cover-inner">
+      <p class="cover-kicker">Calendario de Adviento para</p>
+      <h1 id="coverName" class="cover-name"></h1>
+      <div class="cover-divider" aria-hidden="true">
+        <span></span>
+        <svg viewBox="-12 -12 24 24"><path d="M0-11 Q1-1 11 0 Q1 1 0 11 Q-1 1-11 0 Q-1-1 0-11Z" fill="currentColor"/></svg>
+        <span></span>
+      </div>
+      <p id="coverDedication" class="cover-dedication"></p>
+      <p id="coverSignature" class="cover-signature"></p>
+      <button id="enterBtn" class="btn btn-enter" type="button">
+        <span class="btn-shine" aria-hidden="true"></span>
+        <span>Entrar</span>
+      </button>
+      <p class="cover-hint">Sube el volumen: hay música ✦</p>
+    </div>
+  </section>
+
+  <!-- Cabecera sobre la escena -->
+  <header id="hud" class="hud">
+    <div class="hud-title">
+      <span class="hud-for">Adviento de</span>
+      <span id="hudName" class="hud-name"></span>
+    </div>
+    <div class="hud-info">
+      <span id="hudCount" class="hud-count"></span>
+      <button id="hudToday" class="hud-today" type="button"></button>
+    </div>
+  </header>
+
+  <!-- Botón de sonido -->
+  <button id="soundBtn" class="sound-btn" type="button" hidden aria-label="Silenciar sonido">
+    <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+      <path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    </svg>
+    <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+      <path d="M16.5 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <!-- Mensajes breves -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Modal del regalo -->
+  <div id="modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" data-close></div>
+    <article class="modal-card">
+      <button id="modalCloseX" class="modal-x" type="button" data-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <header class="modal-head">
+        <span id="modalDay" class="modal-day"></span>
+        <h2 id="modalTitle" class="modal-title"></h2>
+      </header>
+      <div class="modal-body">
+        <figure class="photo-frame">
+          <div id="photoSlot" class="photo-slot"></div>
+        </figure>
+        <div class="modal-side">
+          <p id="modalMessage" class="modal-message"></p>
+          <div class="extras">
+            <figure class="tile">
+              <div id="modalIllustration" class="illus"></div>
+              <figcaption id="illusCaption"></figcaption>
+            </figure>
+            <figure class="tile tile-3d">
+              <div id="objHolder" class="obj-holder"></div>
+              <figcaption><span id="objCaption"></span> <small>· arrástralo</small></figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <footer class="modal-foot">
+        <button class="btn" type="button" data-close>Volver al árbol</button>
+      </footer>
+    </article>
+  </div>
+
+  <!-- Panel del MODO PRUEBA (solo con ?test=1 en la URL) -->
+  <aside id="testPanel" class="test-panel" hidden aria-label="Modo prueba">
+    <button id="testToggle" class="test-toggle" type="button" aria-label="Mostrar u ocultar panel de prueba">⚙</button>
+    <div class="test-body">
+      <strong>Modo prueba</strong>
+      <label class="test-row"><input id="tUnlockAll" type="checkbox" checked> Desbloquear todo</label>
+      <label class="test-row">Simular fecha <input id="tDate" type="date"></label>
+      <div class="test-row">
+        <button id="tDecFirst" type="button">1 de diciembre</button>
+        <button id="tReset" type="button">Reiniciar progreso</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Aviso si los módulos no cargan (p. ej. abriendo el archivo sin servidor) -->
+  <script>
+    setTimeout(function () {
+      if (window.__adventStarted) return;
+      var loader = document.getElementById('loader');
+      var text = document.getElementById('loaderText');
+      loader.classList.add('error');
+      text.innerHTML = location.protocol === 'file:'
+        ? 'Para ver el calendario ábrelo con un servidor local<br>(por ejemplo Live Server o <code>npx serve</code>). Mira el README.'
+        : 'No se pudo cargar la librería 3D. Comprueba tu conexión a internet y recarga la página.';
+    }, location.protocol === 'file:' ? 1500 : 15000);
+  </script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
