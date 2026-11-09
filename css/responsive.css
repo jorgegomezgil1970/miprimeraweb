@@ -1,0 +1,108 @@
+/* ==========================================================================
+   Organiza — responsive (mobile-first: los estilos base son para móvil, 360 px+)
+   ========================================================================== */
+
+/* Móviles muy estrechos (≤ 380 px): compactar un poco */
+@media (max-width: 380px) {
+  body { font-size: 14px; }
+  .view { padding: 12px 12px 28px; }
+  .topbar { padding: 8px 12px; }
+  .filter-btn { padding: 6px 10px; font-size: .8rem; }
+  .task-actions .icon-btn { width: 32px; height: 32px; }
+  .nav-link { font-size: .62rem; }
+  .chooser { grid-template-columns: 1fr; }
+  .cat-prog { grid-template-columns: 92px 1fr auto; }
+}
+
+/* Móvil: etiquetas 3D más compactas */
+@media (max-width: 559px) {
+  .island-label { padding: 3px 8px; font-size: .72rem; }
+  .island-label small { display: none; }
+  .day-num { font-size: .66rem; padding: 0 3px; }
+  .weekday-label { font-size: .68rem; }
+  .weekday-label.big { font-size: .66rem; padding: 1px 4px; }
+  .hour-label { font-size: .6rem; }
+  .day-more { display: none; }
+}
+
+/* En móvil, las acciones secundarias de la tarea pasan a una fila propia */
+@media (max-width: 559px) {
+  .task-item { flex-wrap: wrap; }
+  .task-main { flex: 1 1 calc(100% - 40px); }
+  .task-actions { width: 100%; justify-content: flex-end; margin-top: -4px; }
+  .modal-footer .btn { flex: 1 1 auto; }
+  .alert-actions { width: 100%; }
+  .view-header .btn-primary { width: 100%; }
+}
+
+/* ≥ 560 px: formularios en dos columnas, toasts a la derecha */
+@media (min-width: 560px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1.4fr 1fr 1fr; }
+  .search { flex: 1 1 260px; }
+  .toasts { left: auto; width: 380px; }
+  .scene { height: 400px; }
+  .scene-cal { height: 440px; }
+  .islands-2d { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .week-2d { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .settings-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .settings-grid .span-2 { grid-column: span 2; }
+}
+
+/* ≥ 760 px: Kanban en tres columnas */
+@media (min-width: 760px) {
+  .kanban { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  .view { padding: 20px 24px 40px; }
+  .topbar { padding: 12px 24px; }
+}
+
+/* ≥ 900 px: navegación lateral en lugar de barra inferior */
+@media (min-width: 900px) {
+  .app { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
+  .main-col { padding-bottom: 32px; }
+  .sidebar {
+    position: sticky; top: 0; bottom: auto; height: 100vh; height: 100dvh;
+    display: flex; flex-direction: column; gap: 8px; padding: 20px 14px;
+    border-top: 0; border-right: 1px solid var(--border); background: var(--surface);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 18px; text-decoration: none; color: var(--text); }
+  .brand-name { font-size: 1.2rem; font-weight: 750; letter-spacing: -.02em; }
+  .sidebar-foot { display: block; margin-top: auto; padding: 0 10px; }
+  .sidebar-foot span:first-child::first-letter { text-transform: uppercase; }
+  .nav-list { flex-direction: column; height: auto; gap: 2px; justify-content: flex-start; }
+  .nav-list li { flex: none; }
+  .nav-link {
+    flex-direction: row; justify-content: flex-start; gap: 12px; padding: 10px 12px; border-radius: 12px;
+    font-size: .92rem; height: auto;
+    transition: background var(--fast), color var(--fast);
+  }
+  .nav-link:hover { background: var(--surface-2); }
+  .nav-link[aria-current="page"] { background: var(--primary-soft); color: var(--primary); }
+  .nav-link[aria-current="page"]::before { display: none; }
+  .badge { position: static; margin-left: auto; }
+  .fab-wrap { right: 28px; bottom: 28px; }
+  .toasts { bottom: 28px; right: 104px; } /* a la izquierda del botón + */
+  h1 { font-size: 1.75rem; }
+}
+
+/* ≥ 1100 px: dashboard y calendario en dos columnas */
+@media (min-width: 1100px) {
+  .dashboard { grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr); }
+  .scene { height: 460px; }
+  .calendar-layout { grid-template-columns: minmax(0, 1fr) 320px; }
+  .scene-cal { height: 540px; }
+  .settings-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Pantallas grandes */
+@media (min-width: 1500px) {
+  .scene { height: 540px; }
+  .scene-cal { height: 620px; }
+  .calendar-layout { grid-template-columns: minmax(0, 1fr) 360px; }
+}
+
+/* Dispositivos táctiles: objetivos táctiles cómodos */
+@media (pointer: coarse) {
+  .icon-btn { width: 40px; height: 40px; }
+  .drag-handle { width: 40px; height: 40px; }
+}

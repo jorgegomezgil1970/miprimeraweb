@@ -1,0 +1,6 @@
+Carpeta reservada para sonidos de alerta.
+
+Organiza no necesita ningún archivo aquí: el sonido del aviso (dos notas suaves,
+Mi5 → La5) se genera por código con la Web Audio API en js/reminders.js
+(función playChime). Así se evita depender de archivos binarios y de peticiones
+que podrían fallar al abrir la app sin servidor.

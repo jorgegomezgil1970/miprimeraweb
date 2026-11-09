@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Organiza: gestor personal de tareas, reuniones y avisos para lo personal, el trabajo y el estudio.">
+  <meta name="theme-color" content="#f6f8fb">
+  <title>Organiza</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%236b9bd1'/%3E%3Cpath d='m9 16.5 4.5 4.5L23 11.5' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Three.js (única librería externa) desde CDN mediante importmap -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#view">Saltar al contenido</a>
+
+  <div class="app">
+    <!-- Navegación lateral (PC) / barra inferior (móvil) -->
+    <nav class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="#/inicio" aria-label="Organiza, ir al inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="32" height="32"><rect width="32" height="32" rx="9" fill="#6b9bd1"/><path d="m9 16.5 4.5 4.5L23 11.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-name">Organiza</span>
+      </a>
+      <ul class="nav-list" id="nav-list"></ul>
+      <p class="sidebar-foot muted small">
+        <span id="today-label"></span>
+        <span id="persist-flag" class="persist-flag" hidden>· Modo sin guardado</span>
+      </p>
+    </nav>
+
+    <div class="main-col">
+      <!-- Filtro global de categoría -->
+      <header class="topbar">
+        <div class="filter" id="filter" role="radiogroup" aria-label="Filtrar por categoría"></div>
+      </header>
+
+      <main id="view" class="view" tabindex="-1">
+        <noscript><p class="notice warning">Organiza necesita JavaScript activado.</p></noscript>
+      </main>
+    </div>
+  </div>
+
+  <!-- Botón flotante "+" para añadir rápido -->
+  <div class="fab-wrap">
+    <ul class="fab-menu" id="fab-menu" role="menu" aria-label="Añadir" hidden></ul>
+    <button type="button" class="fab" id="fab" aria-haspopup="menu" aria-expanded="false" aria-controls="fab-menu" aria-label="Añadir tarea, reunión o aviso"></button>
+  </div>
+
+  <!-- Zona de notificaciones -->
+  <div class="toasts" id="toasts" aria-live="polite" aria-relevant="additions"></div>
+
+  <!-- Aviso si los módulos no cargan (p. ej. abrir con file:// en Chrome) -->
+  <div class="boot-fallback" id="boot-fallback" hidden>
+    <div>
+      <h1>No se pudo iniciar Organiza</h1>
+      <p>Tu navegador ha bloqueado los módulos JavaScript al abrir el archivo directamente (<code>file://</code>).</p>
+      <p>Sírvela con un servidor estático, por ejemplo:</p>
+      <pre><code>python -m http.server 8000</code></pre>
+      <p>y abre <code>http://localhost:8000</code>. También funciona con la extensión «Live Server» de VS Code o abriendo el archivo en Firefox.</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+  <script>
+    // Si tras unos segundos la app no ha arrancado, mostrar instrucciones.
+    setTimeout(function () {
+      if (!window.__organizaBooted) document.getElementById('boot-fallback').hidden = false;
+    }, 2500);
+  </script>
+</body>
+</html>
